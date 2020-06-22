@@ -1,0 +1,10 @@
+{
+  "$schema": "http://json-schema.org/draft-04/schema#",
+  "title": "CommentsModel",
+  "type": "object",
+  "properties": {
+     "CommentId": {"type": "string" },
+     "Author": {"type": "string"},
+     "Message": {"type": "string"}
+  }
+ }

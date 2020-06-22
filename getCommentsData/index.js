@@ -12,18 +12,35 @@ exports.handler = async (event, context, callback)  => {
     region: "us-east-1"
   })
 
+  let { id } = event.pathParameters
+
   const params = {
     TableName: "Comments",
     Key: {
-      CommentId: "1"
+      CommentId: id
     }
   }
 
   try {
     const data = await documentClient.get(params).promise()
-    console.log("DATA: ", data);
+    if(data){
+      let responseBody = JSON.stringify(data.Item);
+      return {
+        statusCode: 200,
+        headers: {
+          myHeader: "test"
+        },
+        body: responseBody
+      }
+    }
   } catch (error) {
-    console.log(error);
+    return {
+      statusCode: 500,
+      header: {
+        myHeader: "failed"
+      },
+      body: {message: "Unable to get user data"}
+    }
   }
 
 }

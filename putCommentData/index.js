@@ -11,21 +11,36 @@ exports.handler = async (event, context, callback)  => {
   const documentClient = new aws.DynamoDB.DocumentClient({
     region: "us-east-1"
   })
+  let { CommentId, Author, Message } = JSON.parse(event.body)
 
   const params = {
     TableName: "Comments",
     Item: {
-      CommentId: "2",
-      Author: "Jane",
-      Message: "Posting"
+      CommentId,
+      Author,
+      Message
     }
   }
 
   try {
     const data = await documentClient.put(params).promise()
-    console.log("DATA: ", data);
+    if(data){
+      return {
+        statusCode: 201,
+        headers: {
+          myHeader: "amberjones"
+        },
+        body: JSON.stringify(params.Item)
+      }
+    }
   } catch (error) {
-    console.log(error);
+    return {
+      statusCode: 500,
+      header: {
+        myHeader: "failed"
+      },
+      body: {message: "Unable to put user data"}
+    }
   }
 
 }
