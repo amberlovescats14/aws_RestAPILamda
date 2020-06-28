@@ -21,24 +21,25 @@ exports.handler = async (event, context, callback)  => {
     }
   }
 
+  const headers = {
+    "Content-Type": "application/json",
+    "access-control-allow-origin": "*"
+  }
+  
   try {
     const data = await documentClient.get(params).promise()
     if(data){
       let responseBody = JSON.stringify(data.Item);
       return {
         statusCode: 200,
-        headers: {
-          myHeader: "test"
-        },
+        headers,
         body: responseBody
       }
     }
   } catch (error) {
     return {
       statusCode: 500,
-      header: {
-        myHeader: "failed"
-      },
+      headers,
       body: {message: "Unable to get user data"}
     }
   }

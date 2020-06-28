@@ -24,23 +24,23 @@ exports.handler = async (event, context, callback) => {
     }
   }
 
+  const headers = {
+    "Content-Type": "application/json",
+    "access-control-allow-origin": "*"
+  }
   try {
     const data = await documentClient.delete(params).promise()
     if (data) {
       return {
         statusCode: 200,
-        headers: {
-          myHeader: "Delete success"
-        },
+        headers,
         body: params.Key.CommentId
       }
     }
   } catch (error) {
     return {
       statusCode: 500,
-      header: {
-        myHeader: "failed"
-      },
+      headers,
       body: {
         message: error.message
       }

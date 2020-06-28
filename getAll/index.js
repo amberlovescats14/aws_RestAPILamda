@@ -16,25 +16,24 @@ exports.handler = async (event, context, callback)  => {
     TableName: "Comments",
   }
 
+  const headers = {
+    "Content-Type": "application/json",
+    "access-control-allow-origin": "*"
+  }
   try {
-    const data = await documentClient.scan(params).promise()
-    if(data){
-      let responseBody = JSON.parse(data.Items);
-      console.log("BODY: ", responseBody);
-      return {
-        statusCode: 200,
-        headers: {
-          myHeader: "test"
-        },
-        body: responseBody
+      let data = await documentClient.scan(params).promise()
+      if(data){
+        let responseBody = JSON.stringify(data);
+        return {
+          statusCode: 200,
+          headers,
+          body: responseBody
       }
-    }
+      }
   } catch (error) {
     return {
       statusCode: 500,
-      header: {
-        myHeader: "failed"
-      },
+      headers,
       body: {message: "Unable to get comments data: "+ error.message}
     }
   }

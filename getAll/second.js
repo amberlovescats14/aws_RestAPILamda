@@ -11,35 +11,33 @@ exports.handler = async (event, context, callback)  => {
   const documentClient = new aws.DynamoDB.DocumentClient({
     region: "us-east-1"
   })
-  let { CommentId, Author, Message } = JSON.parse(event.body)
+
 
   const params = {
     TableName: "Comments",
-    Item: {
-      CommentId,
-      Author,
-      Message
-    }
   }
 
   const headers = {
     "Content-Type": "application/json",
     "access-control-allow-origin": "*"
   }
+  
   try {
-    const data = await documentClient.put(params).promise()
+    const data = await documentClient.get(params).promise()
+    console.log("data: ", data);
     if(data){
+      let responseBody = JSON.stringify(data.Item);
       return {
-        statusCode: 201,
+        statusCode: 200,
         headers,
-        body: JSON.stringify(params.Item)
+        body: responseBody
       }
     }
   } catch (error) {
     return {
       statusCode: 500,
       headers,
-      body: {message: "Unable to put user data"}
+      body: {message: "Unable to get user data"}
     }
   }
 
